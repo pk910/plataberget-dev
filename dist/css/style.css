@@ -394,8 +394,8 @@ section {
 .genesis-table td:first-child {
     color: var(--text-muted);
     font-size: 0.9rem;
-    width: 180px;
-    white-space: nowrap;
+    width: 260px;
+    padding-right: 1rem;
 }
 
 .genesis-table td:last-child {
@@ -723,6 +723,20 @@ footer a:hover {
 
     .header-links {
         display: none;
+    }
+
+    .genesis-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .genesis-table td:first-child {
+        width: 100%;
+        padding: 0.75rem 0 0.25rem;
+    }
+
+    .genesis-table td:last-child {
+        padding: 0 0 0.75rem;
     }
 }
 
