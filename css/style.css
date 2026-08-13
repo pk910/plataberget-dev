@@ -79,27 +79,90 @@ header .container {
     color: var(--text-primary);
 }
 
-/* Hero */
+/* Hero
+ * Three native-size pieces: a 1800x600 center shown in full, flanked by
+ * 400x600 seamlessly repeatable side tiles that extend the panorama on
+ * wide screens. On narrow screens the sides collapse first, then the
+ * center gets cropped symmetrically. Nothing is ever scaled - the hero
+ * is exactly as tall as the artwork. */
 .hero {
-    padding: 4rem 0;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    height: 600px;
+    background: #071947;
     text-align: center;
 }
 
-.hero h1 {
-    font-size: 3rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    background: linear-gradient(135deg, var(--accent), #a78bfa);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+.hero-art {
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.hero-art > div {
+    height: 600px;
+}
+
+.hero-art__side {
+    flex: 1 0 0;
+    min-width: 0;
+    background-repeat: repeat-x;
+}
+
+.hero-art__left {
+    background-image: url('../img/plataberget-hero-left.png');
+    background-position: right top;
+}
+
+.hero-art__right {
+    background-image: url('../img/plataberget-hero-right.png');
+    background-position: left top;
+}
+
+.hero-art__center {
+    flex: 0 0 1800px;
+    background-image: url('../img/plataberget-hero-center.png');
+    background-position: center top;
+    background-repeat: no-repeat;
+}
+
+.hero::after {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+        90deg,
+        rgba(10, 10, 11, 0.05),
+        rgba(10, 10, 11, 0.2) 25%,
+        rgba(10, 10, 11, 0.45) 38%,
+        rgba(10, 10, 11, 0.47) 62%,
+        rgba(10, 10, 11, 0.2) 75%,
+        rgba(10, 10, 11, 0.05)
+    );
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
 }
 
 .hero .subtitle {
-    font-size: 1.25rem;
-    color: var(--text-secondary);
-    max-width: 600px;
-    margin: 0 auto 2rem;
+    color: rgba(255, 255, 255, 0.90);
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.78);
 }
 
 .status-badge {
@@ -128,6 +191,16 @@ header .container {
 @keyframes pulse {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.5; }
+}
+
+.hero h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, var(--accent), #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 /* Buttons */
