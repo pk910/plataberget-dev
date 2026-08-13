@@ -26,7 +26,7 @@ body {
 }
 
 .container {
-    max-width: 900px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 0 1.5rem;
 }
@@ -90,6 +90,7 @@ header .container {
     isolation: isolate;
     overflow: hidden;
     height: 600px;
+    padding: 0;
     background: #071947;
     text-align: center;
 }
@@ -163,6 +164,8 @@ header .container {
 .hero .subtitle {
     color: rgba(255, 255, 255, 0.90);
     text-shadow: 0 2px 14px rgba(0, 0, 0, 0.78);
+    max-width: 46rem;
+    margin: 0 auto 1.75rem;
 }
 
 .status-badge {
@@ -262,16 +265,47 @@ header .container {
 
 /* Sections */
 section {
-    padding: 3rem 0;
+    padding: 1.75rem 0;
 }
 
 .section-title {
-    font-size: 1.5rem;
+    font-size: 1.35rem;
     font-weight: 600;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
+}
+
+/* Paired sections: two columns on desktop, stacked on mobile.
+   Cards stretch to equal height within a pair. */
+.section-cols {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+    align-items: stretch;
+}
+
+.section-cols > div {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.section-cols .resource-section {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+@media (min-width: 1000px) {
+    .section-cols {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .section-cols.cols-wide-left {
+        grid-template-columns: 3fr 2fr;
+        align-items: start;
+    }
 }
 
 /* Info Cards */
@@ -279,6 +313,12 @@ section {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1rem;
+}
+
+@media (min-width: 1000px) {
+    .info-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
 
 .info-card {
@@ -369,15 +409,21 @@ section {
 .resource-link {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.5rem;
+    min-width: 0;
+    overflow-wrap: anywhere;
     color: var(--accent);
     text-decoration: none;
-    padding: 0.5rem 0;
-    transition: color 0.2s;
+    padding: 0.375rem 0.5rem;
+    margin: 0 -0.5rem;
+    border-radius: 0.375rem;
+    transition: color 0.2s, background 0.2s;
 }
 
 .resource-link:hover {
     color: var(--accent-hover);
+    background: var(--bg-tertiary);
 }
 
 .resource-link svg {
@@ -389,6 +435,7 @@ section {
 .resource-meta {
     color: var(--text-muted);
     font-size: 0.85em;
+    white-space: nowrap;
 }
 
 /* Resource link row with status indicator */
@@ -686,6 +733,15 @@ section {
     .status-row.cols-3 {
         grid-template-columns: 1fr 1fr;
     }
+
+    .info-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+    }
+
+    .info-card {
+        padding: 1rem;
+    }
 }
 
 /* Fork Schedule */
@@ -748,7 +804,8 @@ section {
 
 /* Footer */
 footer {
-    padding: 2rem 0;
+    margin-top: 1.5rem;
+    padding: 1.5rem 0;
     border-top: 1px solid var(--border);
     text-align: center;
     color: var(--text-muted);
@@ -767,7 +824,7 @@ footer a:hover {
 /* Notice Section */
 .notice-text {
     color: var(--text-secondary);
-    line-height: 1.8;
+    line-height: 1.7;
 }
 
 .notice-text a {
