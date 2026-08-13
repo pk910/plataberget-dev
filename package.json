@@ -1,0 +1,13 @@
+{
+  "name": "plataberget-dev",
+  "version": "1.0.0",
+  "description": "Platåberget Testnet Developer Portal",
+  "scripts": {
+    "build": "mkdir -p dist && cp -r index.html css js img dist/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pk910/plataberget-dev"
+  },
+  "license": "MIT"
+}
