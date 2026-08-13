@@ -1,7 +1,7 @@
 const PLATABERGET_CONFIG = {
     // API configuration (Dora explorer API)
     api: {
-        baseUrl: 'https://dora.glamsterdam-devnet-8.ethpandaops.io/api/v1',
+        baseUrl: 'https://dora.plataberget.ethpandaops.io/api/v1',
         token: '',
         endpoints: {
             overview: '/network/overview',
@@ -61,7 +61,7 @@ const PLATABERGET_CONFIG = {
             symbol: 'ETH',
             decimals: 18
         },
-        rpcUrls: ['https://rpc.glamsterdam-devnet-8.ethpandaops.io'],
-        blockExplorerUrls: ['https://dora.glamsterdam-devnet-8.ethpandaops.io']
+        rpcUrls: ['https://rpc.plataberget.ethpandaops.io'],
+        blockExplorerUrls: ['https://dora.plataberget.ethpandaops.io']
     }
 };

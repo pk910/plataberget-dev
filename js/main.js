@@ -225,18 +225,19 @@ function mapApiForks(apiForks) {
 
         let name, elVersion, clVersion;
 
-        if (data.type === 'bpo') {
+        if (epoch === 0) {
+            // Genesis - Platåberget launches with everything through Fusaka active
+            // (dora also reports blob schedule entries as BPO forks at epoch 0)
+            name = 'Genesis (Merge → Fusaka)';
+            elVersion = 'Osaka';
+            clVersion = 'Fulu';
+        } else if (data.type === 'bpo') {
             // BPO forks
             name = data.names.join(' / ');
             // BPOs don't change versions, use latest consensus versions
             const prevFork = displayForks[displayForks.length - 1];
             elVersion = prevFork ? prevFork.elVersion : 'Osaka';
             clVersion = prevFork ? prevFork.clVersion : 'Fulu';
-        } else if (epoch === 0) {
-            // Genesis forks - Platåberget launches with everything through Fusaka active
-            name = 'Genesis (Merge → Fusaka)';
-            elVersion = 'Osaka';
-            clVersion = 'Fulu';
         } else {
             // Regular consensus forks - use friendly name if available
             const latestCl = data.clVersions[data.clVersions.length - 1];
@@ -724,17 +725,19 @@ async function checkAllEndpoints() {
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', async function() {
-    // Try to fetch live data first
-    await fetchNetworkData();
-
-    // Render all sections (will use live data if available, fallback to config)
+    // Render immediately from the static config, then refresh with live data
     renderNetworkInfo();
-    renderLiveStatus();
     renderForkSchedule();
     initCopyButtons();
 
     // Check endpoint liveness
     checkAllEndpoints();
+
+    // Fetch live data and re-render (falls back to config if unavailable)
+    await fetchNetworkData();
+    renderNetworkInfo();
+    renderLiveStatus();
+    renderForkSchedule();
 
     // Auto-refresh live status every 5 minutes
     setInterval(refreshLiveStatus, 5 * 60 * 1000);
