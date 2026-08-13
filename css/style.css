@@ -115,21 +115,31 @@ header .container {
     background-repeat: repeat-x;
 }
 
+/* Each panel stacks the real WebP over an inlined blurred micro-preview
+ * (LQIP): the placeholder paints instantly, the full image covers it as
+ * soon as it is decoded. LQIP layers are stretched to the piece's native
+ * footprint so the transition doesn't shift. */
 .hero-art__left {
-    background-image: url('../img/plataberget-hero-left.png');
+    background-image: url('../img/plataberget-hero-left.webp'),
+        url('data:image/webp;base64,UklGRjwAAABXRUJQVlA4IDAAAADQAQCdASoIAAwAA4BaJbACdAEO/hs4gAD++EstoWoGUBo+Pj9Hx+MifyM7sOyAkAA=');
     background-position: right top;
+    background-size: auto, 400px 600px;
 }
 
 .hero-art__right {
-    background-image: url('../img/plataberget-hero-right.png');
+    background-image: url('../img/plataberget-hero-right.webp'),
+        url('data:image/webp;base64,UklGRkAAAABXRUJQVlA4IDQAAADQAQCdASoIAAwAA4BaJbACdAEO/d+YAAD++Estv37/W7sHZldvHx+j4/GRP5Gd2HZASAAA');
     background-position: left top;
+    background-size: auto, 400px 600px;
 }
 
 .hero-art__center {
     flex: 0 0 1800px;
-    background-image: url('../img/plataberget-hero-center.png');
+    background-image: url('../img/plataberget-hero-center.webp'),
+        url('data:image/webp;base64,UklGRqQAAABXRUJQVlA4IJgAAADQBACdASokAAwAPulgp02pJaOiNVgIASAdCWwAnS9IgP0pi1dyW6DSQ9Lr9QJgAAD+8rSNkS5+WBwdZUA43ERvq+UrFJ1Y3rtkji8hOFTPx8bPFGDnPwWNAl0+5LHRvj1Q6oDsN/JTrD9FUcfQTkAlmzxCnNfqzhzhfBl69QR+6sz6uO8pTcv1UqDEhdk0NqCCFtz129dAAA==');
     background-position: center top;
     background-repeat: no-repeat;
+    background-size: auto, 1800px 600px;
 }
 
 .hero::after {
