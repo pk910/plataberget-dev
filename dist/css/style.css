@@ -375,7 +375,6 @@ section {
 .genesis-table {
     width: 100%;
     border-collapse: collapse;
-    table-layout: fixed;
 }
 
 .genesis-table tr {
@@ -394,7 +393,8 @@ section {
 .genesis-table td:first-child {
     color: var(--text-muted);
     font-size: 0.9rem;
-    width: 260px;
+    width: 1%;
+    white-space: nowrap;
     padding-right: 1rem;
 }
 
@@ -414,9 +414,7 @@ section {
     background: var(--bg-tertiary);
     padding: 0.25rem 0.5rem;
     border-radius: 0.25rem;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    word-break: break-all;
     flex: 1;
     min-width: 0;
 }
@@ -732,6 +730,7 @@ footer a:hover {
 
     .genesis-table td:first-child {
         width: 100%;
+        white-space: normal;
         padding: 0.75rem 0 0.25rem;
     }
 
