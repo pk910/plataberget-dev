@@ -898,6 +898,154 @@ footer a:hover {
     }
 }
 
+/* FAQ */
+.faq-item {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    margin-bottom: 0.75rem;
+    overflow: hidden;
+}
+
+.faq-item summary {
+    padding: 1rem 1.25rem;
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    transition: background 0.2s;
+}
+
+.faq-item summary::-webkit-details-marker {
+    display: none;
+}
+
+.faq-item summary::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid var(--text-muted);
+    border-bottom: 2px solid var(--text-muted);
+    transform: rotate(45deg);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+}
+
+.faq-item[open] summary::after {
+    transform: rotate(-135deg);
+}
+
+.faq-item summary:hover {
+    background: var(--bg-tertiary);
+}
+
+.faq-item[open] summary {
+    border-bottom: 1px solid var(--border);
+}
+
+.faq-body {
+    padding: 1rem 1.25rem;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.65;
+}
+
+.faq-body p + p {
+    margin-top: 0.75rem;
+}
+
+.faq-body a {
+    color: var(--accent);
+}
+
+.faq-body code {
+    font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+    font-size: 0.85em;
+    background: var(--bg-tertiary);
+    padding: 0.1rem 0.35rem;
+    border-radius: 0.25rem;
+}
+
+.code-block {
+    font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    padding: 0.875rem 1rem;
+    margin: 0.75rem 0;
+    overflow-x: auto;
+}
+
+/* Gas repricing table */
+.table-scroll {
+    overflow-x: auto;
+    margin-top: 0.75rem;
+}
+
+.gas-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.gas-table th {
+    text-align: left;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    padding: 0.4rem 0.75rem 0.4rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.gas-table td {
+    padding: 0.4rem 0.75rem 0.4rem 0;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.gas-table td:first-child {
+    white-space: normal;
+}
+
+.gas-table tr:last-child td {
+    border-bottom: none;
+}
+
+.gas-table td:nth-child(2) {
+    color: var(--text-muted);
+}
+
+.gas-table td:nth-child(3) {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.gas-note {
+    color: var(--text-muted);
+    font-weight: 400;
+    font-size: 0.8em;
+}
+
+.notice-list {
+    margin: 0.5rem 0 0 1.1rem;
+    padding: 0;
+    color: var(--text-secondary);
+    line-height: 1.65;
+    font-size: 0.95rem;
+}
+
+.notice-list li {
+    margin-bottom: 0.6rem;
+}
+
 /* Toast notification */
 .toast {
     position: fixed;

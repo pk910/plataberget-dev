@@ -21,6 +21,7 @@
                 <span class="logo-text">Platåberget</span>
             </a>
             <nav class="header-links">
+                <a href="#faq">FAQ</a>
                 <a href="https://notes.ethereum.org/@ethpandaops/glamsterdam-devnet-8" target="_blank">Spec Notes</a>
                 <a href="https://dora.plataberget.ethpandaops.io" target="_blank">Explorer</a>
                 <a href="https://github.com/ethpandaops/glamsterdam-devnets" target="_blank">GitHub</a>
@@ -362,6 +363,161 @@
             </div>
         </section>
 
+        <section id="faq">
+            <div class="container">
+                <h2 class="section-title">FAQ</h2>
+
+                <details class="faq-item">
+                    <summary>How do I deposit a validator?</summary>
+                    <div class="faq-body">
+                        <p>
+                            Generate your keys with
+                            <a href="https://github.com/ethstaker/ethstaker-deposit-cli" target="_blank">ethstaker-deposit-cli</a>.
+                            Platåberget is not in its built-in network list, so pass the chain parameters via
+                            <code>--devnet_chain_setting</code> (verified working):
+                        </p>
+                        <pre class="code-block">./deposit new-mnemonic \
+    --compounding --amount 32 \
+    --withdrawal_address 0xYourWithdrawalAddress \
+    --devnet_chain_setting '{
+        "network_name": "plataberget",
+        "genesis_fork_version": "0x10733183",
+        "exit_fork_version": "0x70733183",
+        "genesis_validator_root": "0xbb4a1a9e3f7f4e10edcd734e4acc3b5ffd4f830efe0af2748fa458cfee5d2658"}'</pre>
+                        <p>
+                            <code>--compounding</code> gives the validator 0x02 credentials (balances up to 2048 ETH).
+                            Grab at least 32 test ETH from the
+                            <a href="https://faucet.plataberget.ethpandaops.io" target="_blank">faucet</a>, then submit the
+                            generated <code>deposit_data-*.json</code> on Dora:
+                            <a href="https://dora.plataberget.ethpandaops.io/validators/deposits/submit" target="_blank">Validators &rarr; Submit Deposits</a>
+                            (connect wallet, upload file, send). Never enter a mainnet mnemonic or keystore into any website.
+                        </p>
+                    </div>
+                </details>
+
+                <details class="faq-item">
+                    <summary>How do I become a builder? (pre- &amp; post-Gloas)</summary>
+                    <div class="faq-body">
+                        <p>
+                            Under ePBS (EIP-7732), builders are a separate on-chain actor with their own registry. A builder is
+                            identified by withdrawal credentials starting with the <strong><code>0xB0</code></strong> prefix
+                            (not to be confused with <code>0x0B</code>, the builder <em>domain type</em>). There are two
+                            onboarding paths:
+                        </p>
+                        <p>
+                            <strong>Before the Gloas fork</strong> (epoch 1,536 &mdash; Aug 20, 07:50 UTC): submit a deposit with
+                            <code>0xB0</code> withdrawal credentials through the <em>regular</em> validator deposit contract.
+                            Deposits that are still waiting in the pending-deposit queue when Gloas activates are onboarded as
+                            builders at the fork. <strong>Timing is critical:</strong> a <code>0xB0</code> deposit that gets
+                            <em>processed before</em> the fork becomes a regular validator instead. The
+                            <a href="https://dora.plataberget.ethpandaops.io/builders/deposits" target="_blank">Dora Builder Deposits page</a>
+                            tracks every <code>0xB0</code> deposit and projects its fate at the fork &mdash; check it before you send anything.
+                            Note that ethstaker-deposit-cli cannot produce <code>0xB0</code> credentials (it only knows
+                            0x00/0x01/0x02); use the devnet generator built into Dora's submit pages for builder deposit data.
+                        </p>
+                        <p>
+                            <strong>After the Gloas fork:</strong> builders join through the dedicated
+                            EIP-8282 builder deposit contract (<code>0x0000bff4&hellip;300d8282</code>, already deployed).
+                            Go to <a href="https://dora.plataberget.ethpandaops.io/builders/submit_deposit" target="_blank">Dora &rarr; Builders &rarr; Submit Deposit</a>,
+                            connect a wallet and upload builder deposit data (pubkey, <code>0xB0</code> withdrawal credentials,
+                            amount, and a proof-of-possession signed under the dedicated builder-deposit domain) &mdash; or use the
+                            built-in generator, which is fine for this devnet.
+                        </p>
+                    </div>
+                </details>
+
+                <details class="faq-item">
+                    <summary>Is it safe to deposit a builder yet?</summary>
+                    <div class="faq-body">
+                        <p>
+                            <strong>Not yet</strong> (as of network launch): the pending-deposit queue is short, so a
+                            <code>0xB0</code> deposit sent now would be processed within hours &mdash; long before Gloas activates
+                            &mdash; and would end up as a regular validator, not a builder. The
+                            <a href="https://dora.plataberget.ethpandaops.io/builders/deposits" target="_blank">Builder Deposits page</a>
+                            shows the live projection ("N new builders projected to be onboarded at the fork") and warns while the
+                            queue is too short. Wait until the projection flips, closer to the fork, before depositing.
+                            Once Gloas is active, use the builder deposit contract instead &mdash; that path has no timing caveat.
+                        </p>
+                    </div>
+                </details>
+
+                <details class="faq-item">
+                    <summary>How do the deposit queues work?</summary>
+                    <div class="faq-body">
+                        <p>
+                            <strong>Validator deposits</strong> (pre- and post-Gloas) go through the Electra-style pending-deposit
+                            queue: deposits are queued in order and processed subject to the activation churn limit
+                            (256 ETH per epoch on this network). Dora shows the current queue length and estimated wait on its
+                            deposits pages.
+                        </p>
+                        <p>
+                            <strong>Builder deposits</strong> (post-Gloas, EIP-8282) use an EIP-7002-style fee market instead:
+                            the contract targets <strong>8 deposits per block</strong>, and the request fee starts at 1 wei and ramps
+                            up exponentially while the backlog stays above target (it is currently at the 1 wei floor). The consensus
+                            layer consumes at most 64 builder deposit requests per payload. On the way out, builder exits are capped
+                            at 16 per payload, an exiting builder becomes withdrawable after 64 epochs, and the withdrawal sweep
+                            scans up to 16,384 builders per block, sharing the withdrawal pipeline with the validator sweep.
+                        </p>
+                    </div>
+                </details>
+            </div>
+        </section>
+
+        <section id="repricings">
+            <div class="container">
+                <h2 class="section-title">Amsterdam Gas Repricings</h2>
+                <div class="section-cols">
+                    <div>
+                        <div class="resource-section">
+                            <p class="notice-text">
+                                Glamsterdam reprices gas around the real cost of <strong>state</strong>: a new
+                                per-state-byte dimension makes state <em>creation</em> several times more expensive, while
+                                plain transfers get cheaper. Key changes:
+                            </p>
+                            <div class="table-scroll">
+                                <table class="gas-table">
+                                    <tr><th>Constant</th><th>Osaka</th><th>Amsterdam</th></tr>
+                                    <tr><td>Intrinsic tx base (EIP-2780)</td><td>21,000</td><td>12,000 <span class="gas-note">(+6,000 if value &gt; 0)</span></td></tr>
+                                    <tr><td>New account creation</td><td>25,000</td><td>183,600</td></tr>
+                                    <tr><td>Storage set (new slot)</td><td>20,000</td><td>97,920</td></tr>
+                                    <tr><td>Storage write (existing)</td><td>2,800</td><td>10,000</td></tr>
+                                    <tr><td>Cold account access</td><td>2,600</td><td>3,000</td></tr>
+                                    <tr><td>Call with value</td><td>9,000</td><td>11,300</td></tr>
+                                    <tr><td>Per state byte (EIP-8037)</td><td>&mdash;</td><td>1,530</td></tr>
+                                    <tr><td>Calldata floor per token</td><td>10</td><td>16</td></tr>
+                                    <tr><td>EIP-7702 auth base</td><td>12,500</td><td>35,190</td></tr>
+                                    <tr><td>Max contract size (EIP-7954)</td><td>24 KiB</td><td>64 KiB</td></tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="resource-section">
+                            <p class="notice-text"><strong>What to watch out for:</strong></p>
+                            <ul class="notice-list">
+                                <li>State-heavy operations are the big one: anything creating new accounts or storage slots
+                                    (minting, airdrops, factories, first-time token holders) costs roughly <strong>4&ndash;9&times;
+                                    more</strong>. Re-benchmark those flows here before Glamsterdam reaches mainnet.</li>
+                                <li>Never rely on hardcoded gas amounts &mdash; fixed gas for subcalls, cached estimates, and
+                                    tx-cost calculators all need retesting. Wallet and bundler intrinsic-gas math changes too
+                                    (base 12,000 + 6,000 for value transfers).</li>
+                                <li>Plain ETH transfers get <em>cheaper</em> (18,000 vs 21,000).</li>
+                                <li>Refund behavior changes (EIP-7778 block gas accounting without refunds,
+                                    storage-clear refund 11,616) &mdash; recheck refund-dependent patterns.</li>
+                                <li>Calldata floor cost rises to 16 per token (EIP-7976) &mdash; data-heavy transactions pay more.</li>
+                                <li>Access lists are repriced (EIP-7981) &mdash; re-benchmark before relying on them for savings.</li>
+                                <li>The block gas limit ramps to <strong>200M</strong> at epoch 1,566, right after the fork &mdash;
+                                    plenty of headroom for load testing.</li>
+                            </ul>
+                            <p class="notice-meta">
+                                Full details in the <a href="https://notes.ethereum.org/@ethpandaops/glamsterdam-devnet-8" target="_blank">spec notes</a>
+                                (EIP list &amp; final gas table).
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer>
