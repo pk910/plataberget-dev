@@ -373,17 +373,12 @@
                         <p>
                             Generate your keys with
                             <a href="https://github.com/ethstaker/ethstaker-deposit-cli" target="_blank">ethstaker-deposit-cli</a>.
-                            Platåberget is not in its built-in network list, so pass the chain parameters via
-                            <code>--devnet_chain_setting</code> (verified working):
+                            Platåberget is in its built-in network list from `v1.3.1`
                         </p>
                         <pre class="code-block">./deposit new-mnemonic \
     --compounding --amount 32 \
     --withdrawal_address 0xYourWithdrawalAddress \
-    --devnet_chain_setting '{
-        "network_name": "plataberget",
-        "genesis_fork_version": "0x10733183",
-        "exit_fork_version": "0x70733183",
-        "genesis_validator_root": "0xbb4a1a9e3f7f4e10edcd734e4acc3b5ffd4f830efe0af2748fa458cfee5d2658"}'</pre>
+    --chain plataberget
                         <p>
                             <code>--compounding</code> gives the validator 0x02 credentials (balances up to 2048 ETH).
                             Grab at least 32 test ETH from the
@@ -412,8 +407,8 @@
                             <em>processed before</em> the fork becomes a regular validator instead. The
                             <a href="https://dora.plataberget.ethpandaops.io/builders/deposits" target="_blank">Dora Builder Deposits page</a>
                             tracks every <code>0xB0</code> deposit and projects its fate at the fork &mdash; check it before you send anything.
-                            Note that ethstaker-deposit-cli cannot produce <code>0xB0</code> credentials (it only knows
-                            0x00/0x01/0x02); use the devnet generator built into Dora's submit pages for builder deposit data.
+                            ethstaker-deposit-cli `v1.3.1` or later can produce <code>0xB0</code> credentials using its `./deposit builder` command.
+                            Do <b>not</b> generate <code>0xB0</code> validator keys, use it for builders only
                         </p>
                         <p>
                             <strong>After the Gloas fork:</strong> builders join through the dedicated
